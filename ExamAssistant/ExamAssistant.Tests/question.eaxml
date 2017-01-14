@@ -1,0 +1,30 @@
+﻿<examset>
+  <section title="All Enumeration Section Title" type="Enumeration">
+    <item type="MultipleChoice" question="Name the 3 primary colors." answer="red,blue,yellow">
+      <choice>Option 1</choice>
+      <choice>Option 2</choice>
+    </item>
+    <item question="Give all the colors of the rainbow."></item>
+    <item answer="roygbiv"></item>
+    <item></item>
+    <item>
+      <choice>Option 1</choice>
+      <choice>Option 2</choice>
+    </item>
+  </section>
+  <section title="All Enumeration Section Title" type="Mixed">
+    <item type="MultipleChoice" question="Name the 3 primary colors." answer="red,blue,yellow">
+      <choice>Option 1</choice>
+      <choice>Option 2</choice>
+    </item>
+    <item type="Enumeration">
+      <choice>Option 1</choice>
+      <choice>Option 2</choice>
+    </item>
+    <item>
+      <choice>Option 1</choice>
+      <choice>Option 2</choice>
+    </item>
+    <item></item>
+  </section>
+</examset>

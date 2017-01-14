@@ -1,0 +1,50 @@
+﻿<examset>
+  <section title="All Multiple Choice Section Title" type="MultipleChoice">
+    <item>
+      <question></question>
+      <choices></choices>
+      <answer></answer>
+    </item>
+  </section>
+  <section title="All Enumeration Section Title" type="Enumeration">
+    <item>
+      <question></question>
+      <answer></answer>
+    </item>
+  </section>
+  <section title="All Selection Section Title" type="Selection">
+    <item>
+      <question></question>
+      <choices></choices>
+      <answer></answer>
+    </item>
+  </section>
+  <section title="All Drag Drop Section Title" type="DragDrop">
+    <item>
+      <question></question>
+      <choices></choices>
+      <answer></answer>
+    </item>
+  </section>
+  <section title="Mixed Section Title" type="Mixed">
+    <item type="MultipleChoice">
+      <question></question>
+      <choices></choices>
+      <answer></answer>
+    </item>
+  <item type="Enumeration">
+      <question></question>
+      <answer></answer>
+    </item>
+  <item type="Selection">
+      <question></question>
+      <choices></choices>
+      <answer></answer>
+    </item>
+  <item type="DragDrop">
+      <question></question>
+      <choices></choices>
+      <answer></answer>
+    </item>
+  </section>
+</examset>
