@@ -16,6 +16,25 @@ h2 {
     margin-left: 20px;
 }
 
+/*TAKE EXAM*/
+.exam-section {
+    margin-top: 30px;
+}
+
+.instruction {
+    margin-left: 20px;
+    font-size: 1.3em;
+}
+
+.section-items {
+    margin-left: 20px;
+}
+
+.section-items li {
+    padding-left: 10px;
+    margin-bottom: 30px;
+}
+
 /*
  * Sidebar
  */

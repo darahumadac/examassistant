@@ -1,17 +1,72 @@
 ﻿@using ExamAssistant.Models
 @model ExamAssistant.Models.Exam
 
-<form>
+@helper FormatSection(Section examSection)
+{
+    switch (examSection.Type)
+    {
+        case QuestionType.Enumeration: @EnumerationSection(examSection);
+            break;
+        case QuestionType.Selection: @SelectionSection(examSection);
+            break;
+    }
+}
+
+@helper EnumerationSection(Section examSection)
+{
+    <fieldset class="exam-section">
+        <legend>@examSection.Title</legend>
+        <p class="instruction"><strong>Directions: </strong>@examSection.Instructions</p>
+        @{
+            List<Item> items = examSection.Items;
+            <ol class="section-items">
+                @foreach (Item item in items)
+                {
+                    <li>
+                        <p>@item.Question</p>
+                        <textarea class="form-control" rows="2"></textarea>
+                        <span class="help-block">Separate answers by a comma</span>
+                    </li>
+                }
+            </ol>
+        }
+    </fieldset>
+}
+
+@helper EnumerationItem(string question)
+{
+    
+}
+
+@helper SelectionSection(Section examSection)
+{
+    <fieldset class="exam-section">
+        <legend>@examSection.Title</legend>
+        <p class="instruction"><strong>Directions: </strong>@examSection.Instructions</p>
+        @{
+            List<Item> items = examSection.Items;
+            <ol class="section-items">
+                @foreach (Item item in items)
+                {
+                    <li>
+                        <p>@item.Question</p>
+                        @{
+                            int i = items.IndexOf(item);
+                        }
+                        @foreach (string choice in item.Choices)
+                        {
+                            @Html.CheckBox("choices"+i) @choice <br/>
+                        }
+                    </li>
+                }
+            </ol>
+        }
+    </fieldset>
+}
+
+<form class="form-horizontal container">
     @foreach (Section examSection in Model.Sections)
     {
-        <h2>@examSection.Instructions</h2>
-        <hr/>
-        List<Item> items = examSection.Items;
-        <ol>
-            @foreach (Item item in items)
-            {
-                <li>@item.Question</li>
-            }    
-        </ol>
+        @FormatSection(examSection)
     }
 </form>
