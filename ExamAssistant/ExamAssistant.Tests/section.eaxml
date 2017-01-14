@@ -1,4 +1,4 @@
-﻿<examset>
+﻿<examset name="Exam 1" subject="Math" date="01/14/2017" type="Quiz">
   <section title="All Enumeration Section Title" type="Enumeration" 
            instructions="This is a sample instruction.">
   </section>
