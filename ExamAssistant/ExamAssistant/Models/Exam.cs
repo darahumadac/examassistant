@@ -60,7 +60,7 @@ namespace ExamAssistant.Models
             {
                 _title = sectionAttributes["title"] != null
                     ? sectionAttributes["title"].InnerText
-                    : ConfigurationManager.AppSettings["DefaultSectionTitle"];
+                    : ExamConfiguration.GetSetting("DefaultSectionTitle");
 
                 QuestionType questionType = QuestionType.Enumeration;
                 if (sectionAttributes["type"] != null &&
@@ -72,7 +72,7 @@ namespace ExamAssistant.Models
 
                 _instructions = sectionAttributes["instructions"] != null
                     ? sectionAttributes.GetNamedItem("instructions").InnerText
-                    : ConfigurationManager.AppSettings["DefaultSectionInstructions"];
+                    : ExamConfiguration.GetSetting("DefaultSectionInstructions");
             }
         }
 
@@ -119,11 +119,11 @@ namespace ExamAssistant.Models
             {
                 _question = itemAttributes["question"] != null 
                     ? itemAttributes["question"].InnerText
-                    : ConfigurationManager.AppSettings["DefaultQuestion"];
+                    : ExamConfiguration.GetSetting("DefaultQuestion");
 
                 _answers = itemAttributes["answer"] != null
                     ? itemAttributes["answer"].InnerText.Split(',').ToList()
-                    : new List<string>{ConfigurationManager.AppSettings["DefaultAnswer"]};
+                    : new List<string>{ExamConfiguration.GetSetting("DefaultAnswer")};
 
                 if (_sectionType != QuestionType.Mixed)
                 {
@@ -132,7 +132,7 @@ namespace ExamAssistant.Models
                 else
                 {
                     QuestionType questionType;
-                    Enum.TryParse(ConfigurationManager.AppSettings["DefaultQuestionType"], out questionType);
+                    Enum.TryParse(ExamConfiguration.GetSetting("DefaultQuestionType"), out questionType);
 
                     if (itemAttributes["type"] != null &&
                         Enum.IsDefined(typeof (QuestionType), itemAttributes["type"].InnerText))

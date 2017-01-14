@@ -8,40 +8,34 @@ namespace ExamAssistant.Tests
     [TestClass]
     public class ConfigurationShould
     {
-        private IConfigurationReader _config;
-        public ConfigurationShould()
-        {
-            _config = new WebConfigReader();
-        }
-
         [TestMethod]
         public void Have_Default_SectionName()
         {
-            Assert.IsNotNull(_config.GetSetting("DefaultSectionTitle"));
+            Assert.IsNotNull(ExamConfiguration.GetSetting("DefaultSectionTitle"));
         }
 
         [TestMethod]
         public void Have_Default_SectionInstructions()
         {
-            Assert.IsNotNull(ConfigurationManager.AppSettings["DefaultSectionInstructions"]);
+            Assert.IsNotNull(ExamConfiguration.GetSetting("DefaultSectionInstructions"));
         }
 
         [TestMethod]
         public void Have_Default_Question()
         {
-            Assert.IsNotNull(ConfigurationManager.AppSettings["DefaultQuestion"]);
+            Assert.IsNotNull(ExamConfiguration.GetSetting("DefaultQuestion"));
         }
 
         [TestMethod]
         public void Have_Default_Answer()
         {
-            Assert.IsNotNull(ConfigurationManager.AppSettings["DefaultAnswer"]);
+            Assert.IsNotNull(ExamConfiguration.GetSetting("DefaultAnswer"));
         }
 
         [TestMethod]
         public void Have_Default_QuestionType()
         {
-            Assert.IsNotNull(ConfigurationManager.AppSettings["DefaultQuestionType"]);
+            Assert.IsNotNull(ExamConfiguration.GetSetting("DefaultQuestionType"));
         }
 
         

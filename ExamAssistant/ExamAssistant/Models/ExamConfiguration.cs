@@ -18,5 +18,16 @@ namespace ExamAssistant.Models
         {
             return ConfigurationManager.AppSettings[key];
         }
+
+    }
+
+    public static class ExamConfiguration
+    {
+        private static readonly IConfigurationReader _configurationReader = new WebConfigReader();
+
+        public static string GetSetting(string key)
+        {
+            return _configurationReader.GetSetting(key);
+        }
     }
 }
