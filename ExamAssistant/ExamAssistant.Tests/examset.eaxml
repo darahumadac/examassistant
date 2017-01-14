@@ -1,8 +1,8 @@
-﻿<examset>
+﻿<examset name="Exam 1" subject="Math" date="01/14/2017" type="Quiz">
   <section title="All Multiple Choice Section Title" 
            type="MultipleChoice"
            instructions="Tincidunt integer eu augue augue nunc elit dolor, luctus placerat scelerisque euismod, iaculis eu lacus nunc mi elit, vehicula ut laoreet ac, aliquam sit amet justo nunc tempor, metus vel.">
-    <item question="What is 1 + 1 = ?" answer="B">
+    <item question="What is 1 + 1 = ?" answer="B" pts="2">
       <choice>3</choice>
       <choice>2</choice>
       <choice>1</choice>

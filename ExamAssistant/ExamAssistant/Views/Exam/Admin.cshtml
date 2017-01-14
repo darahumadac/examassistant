@@ -1,0 +1,97 @@
+﻿@using ExamAssistant.Models
+@model Admin
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">Manage Exam Assistant</h1>
+            <div class="table-responsive">
+                <p>
+                    Here you can view the list of students and exams that are registered to 
+                    <strong>Exam Assistant</strong> on this computer.<br />
+                    You can add a new student by clicking on the <span class="text-success">Add Student</span> button. <br />
+                    To add a new exam, click on the <span class="text-success">Add Exam</span> button.
+                </p>
+            </div>
+            <h2 class="sub-header">
+                Registered Students
+                <button type="button" class="add-btn sub-header btn btn-success">Add Student</button>
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ID No.</th>
+                            <th>Full Name</th>
+                            <th>Grade Level</th>
+                            <th>Section</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            List<Student> students = Model.Students;
+                            int studentListLength = students.Count;
+                        }
+
+                        @for (int i = 0; i < studentListLength; i++)
+                        {
+                            Student student = students[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@student.Id</td>
+                                <td>@student.Name</td>
+                                <td>@student.Grade</td>
+                                <td>@student.Section</td>
+                                <td>
+                                    <button class="btn btn-danger">Remove</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="sub-header">
+                Available Exams
+                <button class="add-btn sub-header btn btn-success">Add Exam</button>
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Exam Name</th>
+                            <th>Subject</th>
+                            <th>Exam Type</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            List<Exam> exams = Model.Exams;
+                            int examListLength = exams.Count;
+                        }
+                        @for (int i = 0; i < examListLength; i++)
+                        {
+                            Exam exam = exams[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@exam.Name</td>
+                                <td>@exam.Subject</td>
+                                <td>@exam.Type</td>
+                                <td>@exam.Total</td>
+                                <td>
+                                    <button class="btn btn-danger">Remove</button>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

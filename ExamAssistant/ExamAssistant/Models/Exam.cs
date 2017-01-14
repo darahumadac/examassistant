@@ -11,9 +11,29 @@ namespace ExamAssistant.Models
 {
     public class Exam
     {
-        private readonly string _examSetFilename;
+        private readonly string _examSetFilename;        
         private List<Section> _sections;
+        private string _name;
+        private string _subject;
+        private DateTime _examDate;
+        private string _examType;
+
+        public string Name { get { return _name; } }
+        public string Subject { get { return _subject; } }
         public List<Section> Sections { get { return _sections; } }
+        public string Type { get {return _examType;} }
+        public int Total
+        {
+            get
+            {
+                int total = 0;
+                foreach (Section section in Sections)
+                {
+                    section.Items.ForEach(i => total += i.Points);
+                }
+                return total;
+            }
+        }
 
         public Exam(string examSetFilename)
         {
@@ -27,7 +47,17 @@ namespace ExamAssistant.Models
             examSet.Load(_examSetFilename);
 
             XmlNode examsetNode = examSet.GetElementsByTagName("examset")[0];
+            parseExamAttributes(examsetNode);
             parseSections(examsetNode.ChildNodes);
+        }
+
+        private void parseExamAttributes(XmlNode examsetNode)
+        {
+            XmlAttributeCollection attr = examsetNode.Attributes;
+            _name = attr["name"].InnerText;
+            _subject = attr["subject"].InnerText;
+            _examType = attr["type"].InnerText;
+
         }
 
         private void parseSections(XmlNodeList sectionNodeList)
@@ -99,11 +129,13 @@ namespace ExamAssistant.Models
         private List<string> _answers;
         private List<string> _choices;
         private QuestionType _questionType;
+        private int _points;
 
         public string Question { get { return _question;} }
         public List<string> Answer { get { return _answers;} }
         public List<string> Choices { get { return _choices;} }
         public QuestionType Type { get { return _questionType; } }
+        public int Points { get { return _points; } }
 
         public Item(XmlNode item, QuestionType sectionType)
         {
@@ -142,6 +174,10 @@ namespace ExamAssistant.Models
                     _questionType = questionType;
 
                 }
+
+                _points = itemAttributes["pts"] != null
+                    ? int.Parse(itemAttributes["pts"].InnerText)
+                    : 1;
             }
             
         }

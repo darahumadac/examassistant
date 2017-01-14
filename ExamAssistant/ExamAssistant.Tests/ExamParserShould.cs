@@ -41,6 +41,13 @@ namespace ExamAssistant.Tests
         {
             Exam exam = new Exam(VALID_EXAMSET);
             Assert.IsNotNull(exam);
+            Assert.AreEqual("Exam 1", exam.Name);
+            Assert.AreEqual("Math", exam.Subject);
+            Assert.AreEqual("Quiz", exam.Type);
+
+            Exam exam2 = new Exam(QUESTION_FORMAT_EXAMSET);
+            Assert.AreEqual(10, exam2.Total);
+
         }
 
         [TestMethod]
@@ -137,7 +144,7 @@ namespace ExamAssistant.Tests
         }
 
         [TestMethod]
-        public void Parse_Questions_SectionIsNonMixed_With_QuestionAnswerChoices()
+        public void Parse_Questions_SectionIsNonMixed_With_QuestionAnswerChoicesPts()
         {
             Exam exam = new Exam(QUESTION_FORMAT_EXAMSET);
             Section section = exam.Sections[0];
@@ -149,6 +156,7 @@ namespace ExamAssistant.Tests
             Assert.AreEqual("Name the 3 primary colors.", item1.Question);
             CollectionAssert.AreEqual(item1Answers, item1.Answer);
             CollectionAssert.AreEqual(item1Choices, item1.Choices, "Item should not have choices");
+            Assert.AreEqual(2, item1.Points);
         }
 
         [TestMethod]

@@ -1,0 +1,17 @@
+﻿@using ExamAssistant.Models
+@model ExamAssistant.Models.Exam
+
+<form>
+    @foreach (Section examSection in Model.Sections)
+    {
+        <h2>@examSection.Instructions</h2>
+        <hr/>
+        List<Item> items = examSection.Items;
+        <ol>
+            @foreach (Item item in items)
+            {
+                <li>@item.Question</li>
+            }    
+        </ol>
+    }
+</form>
