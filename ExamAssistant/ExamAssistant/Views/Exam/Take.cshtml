@@ -21,10 +21,11 @@
             break;
         case QuestionType.Selection:
             int itemIndex = Model.Sections[sectionIndex].Items.IndexOf(item);
-            @SelectionItem(sectionIndex+"-"+itemIndex,item);
+            @SelectionItem(sectionIndex + "-" + itemIndex,item);
             break;
         case QuestionType.MultipleChoice:
-            @MultipleChoiceItem(item);
+            int itemIndexRadio = Model.Sections[sectionIndex].Items.IndexOf(item);
+            @MultipleChoiceItem(sectionIndex + "-" + itemIndexRadio, item);
             break;
         case QuestionType.DragDrop:
             @DragDropItem(item);
@@ -53,17 +54,22 @@
     </li>
 }
 
-@helper MultipleChoiceItem(Item item)
+@helper MultipleChoiceItem(string radioId, Item item)
 {
     <li>
         <p>@item.Question</p>
         <ol type="a" class="multiple-choice-option">
-            @foreach (string choice in item.Choices)
+            @{
+                List<string> choices = item.Choices;
+            }
+            @foreach (string choice in choices)
             {
+                int i = choices.IndexOf(choice);
                 <li>
-                    @choice <br />
+                    @Html.RadioButton("radio" + radioId, i)
+                    @choice <br/>
                 </li>
-            }    
+            }
         </ol>
     </li>
 }
