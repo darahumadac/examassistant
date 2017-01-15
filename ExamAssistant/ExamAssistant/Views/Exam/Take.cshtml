@@ -1,6 +1,18 @@
 ﻿@using ExamAssistant.Models
 @model ExamAssistant.Models.Exam
 
+<form class="form-horizontal container">
+    @foreach (Section examSection in Model.Sections)
+    {
+        <fieldset class="exam-section">
+            <legend>@examSection.Title</legend>
+            <p class="instruction"><strong>Directions: </strong>@examSection.Instructions</p>
+            @DisplayItems(examSection)
+        </fieldset>
+    }
+</form>
+
+
 @helper DisplayItems(Section examSection)
 {
     <ol class="section-items">
@@ -11,9 +23,8 @@
         }
     </ol>
 }
-
 @helper FormatItem(int sectionIndex, Item item)
-{   
+{
     switch (item.Type)
     {
         case QuestionType.Enumeration:
@@ -21,7 +32,7 @@
             break;
         case QuestionType.Selection:
             int itemIndex = Model.Sections[sectionIndex].Items.IndexOf(item);
-            @SelectionItem(sectionIndex + "-" + itemIndex,item);
+            @SelectionItem(sectionIndex + "-" + itemIndex, item);
             break;
         case QuestionType.MultipleChoice:
             int itemIndexRadio = Model.Sections[sectionIndex].Items.IndexOf(item);
@@ -30,19 +41,21 @@
         case QuestionType.DragDrop:
             @DragDropItem(item);
             break;
-    }    
+    }
 }
-
 
 @helper EnumerationItem(Item item)
 {
     <li>
         <p>@item.Question</p>
         <textarea class="form-control" rows="2"></textarea>
-        <span class="help-block">Separate answers by a comma (e.g. a,b,c)</span>
+        <span class="help-block">
+            Separate answers by a comma (e.g. a,b,c)
+        </span>
+        @ReviewButton("Review later")
+
     </li>
 }
-
 @helper SelectionItem(string checkboxId, Item item)
 {
     <li>
@@ -51,9 +64,9 @@
         {
             @Html.CheckBox("choices" + checkboxId) @choice <br />
         }
+        @ReviewButton("Review later")
     </li>
 }
-
 @helper MultipleChoiceItem(string radioId, Item item)
 {
     <li>
@@ -67,20 +80,20 @@
                 int i = choices.IndexOf(choice);
                 <li>
                     @Html.RadioButton("radio" + radioId, i)
-                    @choice <br/>
+                    @choice <br />
                 </li>
             }
         </ol>
+        @ReviewButton("Review later")
     </li>
 }
-
 @helper DragDropItem(Item item)
 {
     <li>
         <p>@item.Question</p>
         <div class="col-md-5 drag-drop-container">
             <p class="help-block text-center">Choices</p>
-            <div id="drop-source" 
+            <div id="drop-source"
                  ondrop="drop(event)"
                  ondragover="allowDrop(event)">
                 @foreach (string choice in item.Choices)
@@ -100,21 +113,20 @@
 
             </div>
         </div>
-        
+        <div class="row col-md-12">
+            @ReviewButton("Review later")
+        </div>
+
     </li>
 }
 
-<form class="form-horizontal container">
-    @foreach (Section examSection in Model.Sections)
-    {
-        <fieldset class="exam-section">
-            <legend>@examSection.Title</legend>
-            <p class="instruction"><strong>Directions: </strong>@examSection.Instructions</p>
-            @DisplayItems(examSection)
-        </fieldset>
-
-    }
-</form>
+@helper ReviewButton(string message)
+{
+    <button class=" btn btn-warning btn-xs review-btn">
+        <span class="glyphicon glyphicon-star"></span>
+        @message
+    </button>
+}
 
 @section scripts
 {

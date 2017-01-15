@@ -14,7 +14,10 @@
             </div>
             <h2 class="sub-header">
                 Registered Students
-                <button type="button" class="add-btn sub-header btn btn-success">Add Student</button>
+                <button type="button" class="add-btn sub-header btn btn-success">
+                    <span class="glyphicon glyphicon-plus-sign"></span>
+                    Add Student
+                </button>
             </h2>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -54,7 +57,10 @@
 
             <h2 class="sub-header">
                 Available Exams
-                <button class="add-btn sub-header btn btn-success">Add Exam</button>
+                <button class="add-btn sub-header btn btn-success">
+                    <span class="glyphicon glyphicon-plus-sign"></span>
+                    Add Exam
+                </button>
             </h2>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -70,7 +76,7 @@
                     </thead>
                     <tbody>
                         @{
-                            List<Exam> exams = Model.Exams;
+                            List<Exam> exams = Admin.Exams;
                             int examListLength = exams.Count;
                         }
                         @for (int i = 0; i < examListLength; i++)
