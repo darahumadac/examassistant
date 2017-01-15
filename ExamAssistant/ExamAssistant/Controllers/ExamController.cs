@@ -19,10 +19,13 @@ namespace ExamAssistant.Controllers
             _student = _admin.Students.First(); //TODO: Implement login user
         }
         // GET: Exam
-        public ActionResult Dashboard()
+        public ActionResult Dashboard(string admin) //Temporary hack for testing
         {
             //TODO: Implement switch of view depending on logged in user
-            //return View("Admin", _admin); //For Admins
+            if (admin.Equals( "yes"))
+            {
+                return View("Admin", _admin); //For Admins
+            }
             return View(_student);
         }
 
