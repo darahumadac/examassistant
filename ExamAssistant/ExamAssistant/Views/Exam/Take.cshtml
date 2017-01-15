@@ -1,72 +1,134 @@
 ﻿@using ExamAssistant.Models
 @model ExamAssistant.Models.Exam
 
-@helper FormatSection(Section examSection)
+@helper DisplayItems(Section examSection)
 {
-    switch (examSection.Type)
+    <ol class="section-items">
+        @foreach (Item item in examSection.Items)
+        {
+            int sectionIndex = Model.Sections.IndexOf(examSection);
+            @FormatItem(sectionIndex, item)
+        }
+    </ol>
+}
+
+@helper FormatItem(int sectionIndex, Item item)
+{   
+    switch (item.Type)
     {
-        case QuestionType.Enumeration: @EnumerationSection(examSection);
+        case QuestionType.Enumeration:
+            @EnumerationItem(item);
             break;
-        case QuestionType.Selection: @SelectionSection(examSection);
+        case QuestionType.Selection:
+            int itemIndex = Model.Sections[sectionIndex].Items.IndexOf(item);
+            @SelectionItem(sectionIndex+"-"+itemIndex,item);
             break;
-    }
+        case QuestionType.MultipleChoice:
+            @MultipleChoiceItem(item);
+            break;
+        case QuestionType.DragDrop:
+            @DragDropItem(item);
+            break;
+    }    
 }
 
-@helper EnumerationSection(Section examSection)
+
+@helper EnumerationItem(Item item)
 {
-    <fieldset class="exam-section">
-        <legend>@examSection.Title</legend>
-        <p class="instruction"><strong>Directions: </strong>@examSection.Instructions</p>
-        @{
-            List<Item> items = examSection.Items;
-            <ol class="section-items">
-                @foreach (Item item in items)
-                {
-                    <li>
-                        <p>@item.Question</p>
-                        <textarea class="form-control" rows="2"></textarea>
-                        <span class="help-block">Separate answers by a comma</span>
-                    </li>
-                }
-            </ol>
+    <li>
+        <p>@item.Question</p>
+        <textarea class="form-control" rows="2"></textarea>
+        <span class="help-block">Separate answers by a comma (e.g. a,b,c)</span>
+    </li>
+}
+
+@helper SelectionItem(string checkboxId, Item item)
+{
+    <li>
+        <p>@item.Question</p>
+        @foreach (string choice in item.Choices)
+        {
+            @Html.CheckBox("choices" + checkboxId) @choice <br />
         }
-    </fieldset>
+    </li>
 }
 
-@helper EnumerationItem(string question)
+@helper MultipleChoiceItem(Item item)
 {
-    
+    <li>
+        <p>@item.Question</p>
+        <ol type="a" class="multiple-choice-option">
+            @foreach (string choice in item.Choices)
+            {
+                <li>
+                    @choice <br />
+                </li>
+            }    
+        </ol>
+    </li>
 }
 
-@helper SelectionSection(Section examSection)
+@helper DragDropItem(Item item)
 {
-    <fieldset class="exam-section">
-        <legend>@examSection.Title</legend>
-        <p class="instruction"><strong>Directions: </strong>@examSection.Instructions</p>
-        @{
-            List<Item> items = examSection.Items;
-            <ol class="section-items">
-                @foreach (Item item in items)
+    <li>
+        <p>@item.Question</p>
+        <div class="col-md-5 drag-drop-container">
+            <p class="help-block text-center">Choices</p>
+            <div id="drop-source" 
+                 ondrop="drop(event)"
+                 ondragover="allowDrop(event)">
+                @foreach (string choice in item.Choices)
                 {
-                    <li>
-                        <p>@item.Question</p>
-                        @{
-                            int i = items.IndexOf(item);
-                        }
-                        @foreach (string choice in item.Choices)
-                        {
-                            @Html.CheckBox("choices"+i) @choice <br/>
-                        }
-                    </li>
+                    <div id="@choice" class="drag-drop-option" draggable="true"
+                         ondragstart="drag(event)">
+                        @choice
+                    </div>
                 }
-            </ol>
-        }
-    </fieldset>
+            </div>
+        </div>
+        <div class="col-md-5 drag-drop-container-target">
+            <p class="help-block text-center">Drag answer here</p>
+            <div id="drop-target"
+                 ondragover="allowDrop(event)"
+                 ondrop="drop(event)">
+
+            </div>
+        </div>
+        
+    </li>
 }
 
 <form class="form-horizontal container">
     @foreach (Section examSection in Model.Sections)
     {
-        @FormatSection(examSection)
+        <fieldset class="exam-section">
+            <legend>@examSection.Title</legend>
+            <p class="instruction"><strong>Directions: </strong>@examSection.Instructions</p>
+            @DisplayItems(examSection)
+        </fieldset>
+
     }
 </form>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function drag(e) {
+            e.dataTransfer.setData("answer", e.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("answer");
+            if (ev.target.nodeName === "DIV" && (ev.target.id === "drop-target" || ev.target.id === "drop-source")) {
+                ev.target.appendChild(document.getElementById(data));
+            }
+            
+        }
+    </script>
+    
+}

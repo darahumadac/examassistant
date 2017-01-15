@@ -35,6 +35,38 @@ h2 {
     margin-bottom: 30px;
 }
 
+.section-items ol.multiple-choice-option li{
+    margin-bottom: 5px;
+}
+
+.section-items div.drag-drop-container,
+.section-items div.drag-drop-container-target {
+    border: 1px dashed #54a5c2;
+    padding: 10px;
+}
+
+.section-items div.drag-drop-container-target {
+    margin-left: 10px;
+    border: 1px dashed #52800e;
+}
+
+.section-items div.drag-drop-option {
+    border: 1px solid blueviolet;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.section-items div#drop-target, 
+.section-items div#drop-source {
+    border: 1px dashed black;
+    height: 100%;
+    padding: 20px;
+}
+
+
+
 /*
  * Sidebar
  */
