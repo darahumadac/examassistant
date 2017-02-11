@@ -10,30 +10,23 @@ namespace ExamAssistant.Controllers
 {
     public class ExamController : Controller
     {
-        private Admin _admin;
-        private Student _student;
-
         public ExamController()
         {
-            _admin = new Admin(ExamConfiguration.GetSetting("SettingsDir"));
-            _student = _admin.Students.First(); //TODO: Implement login user
+             //TODO: Implement login user
         }
         // GET: Exam
-        public ActionResult Dashboard(string admin) //Temporary hack for testing
+        public ActionResult Dashboard()
         {
-            //TODO: Implement switch of view depending on logged in user
-            if (admin.Equals( "yes"))
-            {
-                return View("Admin", _admin); //For Admins
-            }
-            return View(_student);
+            return View();
         }
 
         public ActionResult Take(string selectedExam)
         {
             //TODO: Implement showing of the exam questions
-            Exam exam = Admin.Exams.First(e => e.Name.Equals(selectedExam));
-            return View(exam);
+            return View();
         }
+
+        //TODO: Add Exam - Add option to add exam from file or create new exam
+
     }
 }

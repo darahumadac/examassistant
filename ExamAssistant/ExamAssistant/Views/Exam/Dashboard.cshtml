@@ -2,6 +2,58 @@
 @using ExamAssistant.Models
 @model ExamAssistant.Models.Student
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Analytics</a></li>
+                <li><a href="#">Export</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">Dashboard</h1>
+            <h2 class="sub-header">Your Exams</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subject</th>
+                        <th>Exam Type</th>
+                        <th>Schedule</th>
+                        <th>Score</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @DisplayExamTable(new Dictionary<Exam, ExamInfo>())
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="sub-header">Exam History</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subject</th>
+                        <th>Exam Type</th>
+                        <th>Schedule</th>
+                        <th>Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @DisplayExamTable(new Dictionary<Exam, ExamInfo>())
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 @helper DisplayExamTable(Dictionary<Exam, ExamInfo> userExam)
 {
     List<Exam> exams = userExam.Keys.ToList();
@@ -22,67 +74,14 @@
             {
                 <td>-/@exam.Total</td>
                 <td>
-                    @Html.ActionLink("Take Now", "Take", new {selectedExam = exam.Name}, new {@class="btn btn-success"})
+                    @Html.ActionLink("Take Now", "Take", new { selectedExam = exam.Name }, new { @class = "btn btn-success" })
                 </td>
             }
             else
             {
                 <td>TotalScore/@exam.Total</td>
             }
-            
+
         </tr>
     }
 }
-
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
-                <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Analytics</a></li>
-                <li><a href="#">Export</a></li>
-            </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">Dashboard</h1>
-            <h2 class="sub-header">Your Exams</h2>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Subject</th>
-                            <th>Exam Type</th>
-                            <th>Schedule</th>
-                            <th>Score</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @DisplayExamTable(Model.NewExams)
-                    </tbody>
-                </table>
-            </div>
-
-            <h2 class="sub-header">Exam History</h2>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Subject</th>
-                            <th>Exam Type</th>
-                            <th>Schedule</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @DisplayExamTable(Model.CompletedExams)
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>

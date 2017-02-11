@@ -1,0 +1,106 @@
+﻿@using ExamAssistant.Models
+@using PagedList.Mvc
+@model AdminViewModel
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-2 col-md-11 col-md-offset-1 main">
+            <h1 class="page-header">Manage Exam Assistant</h1>
+            <div class="table-responsive">
+                <p>
+                    Here you can view the list of students and exams that are registered to
+                    <strong>Exam Assistant</strong> on this computer.<br/>
+                    You can add a new student by clicking on the <span class="text-success">Add Student</span> button. <br/>
+                    To add a new exam, click on the <span class="text-success">Add Exam</span> button.
+                </p>
+            </div>
+            <div class="row">
+                <h2 class="sub-header">
+                    Registered Students
+                </h2>
+                @using (Ajax.BeginForm("SearchStudents", new AjaxOptions()
+                {
+                    UpdateTargetId = "studentList",
+                    HttpMethod = "POST",
+                    InsertionMode = InsertionMode.Replace
+                }))
+                {
+                    <div class="form-horizontal col-md-10" role="search">
+                        <div class="form-group">
+                            <label for="keyword" class="control-label col-md-2">Search Student</label>
+                            <div class="col-md-7">
+                                <input name="keyword" type="text" class="form-control col-md-10"
+                                       placeholder="Search by name or ID number">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                            <div class="control-label text-right text-uppercase">
+                                <strong>@Model.Students.TotalItemCount records</strong>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                }
+                
+            </div>
+            <div class="table-responsive">
+                @Html.Partial("_StudentListPartial", Model.Students)
+            </div>
+            
+            <div class="row">
+                <h2 class="sub-header">
+                    Available Exams
+                    <button class="add-btn sub-header btn btn-success">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                        Create New Exam
+                    </button>
+                </h2>
+                <div class="form-horizontal col-md-9" role="search">
+                    <div class="form-group">
+                        <label for="searchExam" class="control-label col-md-2">Search Exam</label>
+                        <div class="col-md-7">
+                            <input name="searchExam" type="text" class="form-control col-md-10"
+                                   placeholder="Search by name, subject, or type">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Html.Partial("_ExamListPartial", Model.Exams)
+        </div>
+
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        var updatePage = function(id, targetId, e) {
+            var $pageLink = e;
+
+            var options = {
+                url: $pageLink.attr("href"),
+                type: "GET"
+            };
+
+            $.ajax(options).done(function(data) {
+                var target = $(id).attr(targetId);
+                $(target).replaceWith(data);
+            });
+        }
+
+        var getStudentPage = function() {
+            updatePage("#studentPagedList", "student-pagedlist-target",$(this));
+            return false;
+        }
+
+        var getExamPage = function () {
+            updatePage("#examPagedList", "exam-pagedlist-target", $(this));
+            return false;
+        }
+
+        $("#studentPagedList a[href]").click(getStudentPage);
+        $("#examPagedList a").click(getExamPage);
+    </script>
+}
+
+
+

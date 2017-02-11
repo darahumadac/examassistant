@@ -1,0 +1,45 @@
+﻿@using ExamAssistant.Models
+@model IPagedList<User>
+@{
+    IPagedList<User> students = Model;
+    int studentListLength = students.Count;
+}
+<div id="studentList">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID No.</th>
+            <th>Full Name</th>
+            <th>Grade Level</th>
+            <th>Section</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < studentListLength; i++)
+        {
+            User student = students[i];
+            <tr>
+                <td>@student.Username</td>
+                <td>@student.FullName</td>
+                <td>@student.GradeLevel</td>
+                <td>@student.Section</td>
+                <td>
+                    <button class="btn btn-danger">Remove</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    @{
+        if (Model.PageCount > 1)
+        {
+            <div id="studentPagedList" student-pagedlist-target="#studentList" class="text-center">
+                @Html.PagedListPager(Model, page =>
+                    Url.Action("GetStudentsInPage", "Admin", new {page}),
+                    PagedListRenderOptions.Classic)
+            </div>
+        }
+
+    }
+</div>

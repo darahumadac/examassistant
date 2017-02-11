@@ -84,31 +84,10 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
-    <Compile Include="ExamParserShould.cs" />
-    <Compile Include="ConfigurationShould.cs" />
-    <Compile Include="AdminParserShould.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="examset.eaxml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="Admin\Exams\Exam 1.eaxml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Admin\Exams\Exam 2.eaxml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="section.eaxml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="question.eaxml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Admin\students.eaxml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExamAssistant\ExamAssistant.csproj">

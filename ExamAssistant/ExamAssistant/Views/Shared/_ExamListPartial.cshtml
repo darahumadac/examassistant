@@ -1,0 +1,60 @@
+﻿@using ExamAssistant.Models
+@model IPagedList<ExamInformation>
+<div id="examList">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Exam Name</th>
+                    <th>Subject</th>
+                    <th>Exam Type</th>
+                    <th>Total</th>
+                    <th>Created By</th>
+                    <th>Created Date</th>
+                    <th>Updated By</th>
+                    <th>Updated Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    IPagedList<ExamInformation> exams = Model;
+                    int examListLength = exams.Count;
+                }
+                @for (int i = 0; i < examListLength; i++)
+                {
+                    ExamInformation exam = exams[i];
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@exam.Name</td>
+                        <td>@exam.Subject</td>
+                        <td>@exam.ExamType</td>
+                        <td>@exam.TotalPoints</td>
+                        <td>@exam.CreatedBy</td>
+                        <td>@exam.CreatedDate</td>
+                        <td>@exam.UpdatedBy</td>
+                        <td>@exam.UpdatedDate</td>
+                        <td>
+                            <button class="btn btn-danger">Remove</button>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+        @{
+            if (Model.PageCount > 1)
+            {
+                <div id="examPagedList" exam-pagedlist-target="#examList" class="text-center">
+                    @Html.PagedListPager(Model, page =>
+                        Url.Action("GetExamsInPage", "Admin", new { page }),
+                        PagedListRenderOptions.Classic)
+                </div>
+            }
+
+        }
+    </div>
+</div>
+
+
