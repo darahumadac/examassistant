@@ -6,71 +6,77 @@
     int examListLength = exams.Count;
 }
 <div id="examList">
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Exam Name</th>
-                <th>Subject</th>
-                <th>Exam Type</th>
-                <th>Total</th>
-                <th>Last Updated By</th>
-                <th>Updated Date</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @if (examListLength == 0)
-            {
-                <tr>
-                    <td class="text-center" colspan="7">No exam matching criteria</td>
-                </tr>
-            }
-            @for (int i = 0; i < examListLength; i++)
-            {
-                ExamInformation exam = exams[i];
-                <tr>
-                    <td>@exam.Name</td>
-                    <td>@exam.Subject</td>
-                    <td>@exam.ExamType</td>
-                    <td>@exam.TotalPoints</td>
-                    <td>@exam.UpdatedBy</td>
-                    <td>@exam.UpdatedDate</td>
-                    <td>
-                        <button class="btn btn-danger">Remove</button>
-                    </td>
-                </tr>
-            }
-
-            </tbody>
-        </table>
-        <div class="control-label text-right text-uppercase">
-            @{
-                int computedRecordCount = exams.PageNumber * exams.PageSize;
-
-                int recordCount = computedRecordCount < exams.TotalItemCount ?
-                    computedRecordCount : exams.TotalItemCount;
-            }
-            <strong>@recordCount of @exams.TotalItemCount records</strong>
-        </div>
-        @{
-            if (exams.PageCount > 1)
-            {
-                <div id="examPagedList" exam-pagedlist-target="#examList" class="text-center">
-                    @Html.PagedListPager(exams, page =>
-                                 Url.Action("GetExamsInPage", "Admin", new { page, keyword = searchKeyword }),
-                                PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.Classic,
-                                new AjaxOptions()
-                                {
-                                    HttpMethod = "GET",
-                                    UpdateTargetId = "examList"
-                                }))
-                </div>
-
-            }
-
-}
+    <div id="examMessage" class="alert alert-dismissible alert-success hidden">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success!</strong> Exam has been deleted.
     </div>
-</div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Exam Name</th>
+            <th>Subject</th>
+            <th>Exam Type</th>
+            <th>Total</th>
+            <th>Last Updated By</th>
+            <th>Updated Date</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (examListLength == 0)
+        {
+            <tr>
+                <td class="text-center" colspan="7">No exam matching criteria</td>
+            </tr>
+        }
+        @for (int i = 0; i < examListLength; i++)
+        {
+            ExamInformation exam = exams[i];
+            <tr>
+                <td>@exam.Name</td>
+                <td>@exam.Subject</td>
+                <td>@exam.ExamType</td>
+                <td>@exam.TotalPoints</td>
+                <td>@exam.UpdatedBy</td>
+                <td>@exam.UpdatedDate</td>
+                <td>
+                    <button class="btn btn-danger"
+                            data-toggle="modal"
+                            data-target="#deleteExamModal"
+                            data-exam=@exam.Id>
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
 
+        </tbody>
+    </table>
+    <div class="control-label text-right text-uppercase">
+        @{
+            int computedRecordCount = exams.PageNumber*exams.PageSize;
+
+            int recordCount = computedRecordCount < exams.TotalItemCount ?
+                computedRecordCount : exams.TotalItemCount;
+        }
+        <strong>@recordCount of @exams.TotalItemCount records</strong>
+    </div>
+    @{
+        if (exams.PageCount > 1)
+        {
+            <div id="examPagedList" exam-pagedlist-target="#examList" class="text-center">
+                @Html.PagedListPager(exams, page =>
+                    Url.Action("GetExamsInPage", "Admin", new {page, keyword = searchKeyword}),
+                    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.Classic,
+                        new AjaxOptions()
+                        {
+                            HttpMethod = "GET",
+                            UpdateTargetId = "examList"
+                        }))
+            </div>
+
+        }
+
+    }
+</div>
 

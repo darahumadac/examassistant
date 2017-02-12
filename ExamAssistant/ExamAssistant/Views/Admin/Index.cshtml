@@ -17,7 +17,7 @@
                 <h2 class="sub-header">
                     Registered Students
                 </h2>
-                @using (Ajax.BeginForm("GetStudentsInPage", new { page = 1 }, new AjaxOptions()
+                @using (Ajax.BeginForm("GetStudentsInPage", new { page = 1}, new AjaxOptions()
                 {
                     UpdateTargetId = "studentList",
                     HttpMethod = "POST",
@@ -31,7 +31,7 @@
                                 <input id="studentKeyword" name="keyword" type="text"
                                        class="form-control col-md-10 has-clear"
                                        placeholder="Search by name or ID number">
-                                <span class="clearer glyphicon glyphicon-remove-circle hidden"
+                                <span id="clearStudentSearch" class="clearer glyphicon glyphicon-remove-circle hidden"
                                       clear-target="#studentKeyword"></span>
                                 <button id="studentSearchBtn" type="submit"
                                         class="btn btn-primary search-btn">
@@ -39,11 +39,8 @@
                                 </button>
                             </div>
                         </div>
-
                     </div>
-
                 }
-
             </div>
             <div class="table-responsive">
                 @Html.Partial("_StudentListPartial", Model.Students)
@@ -57,7 +54,7 @@
                         Create New Exam
                     </button>
                 </h2>
-                @using (Ajax.BeginForm("GetExamsInPage", new { page = 1 }, new AjaxOptions()
+                @using (Ajax.BeginForm("GetExamsInPage", new {page = 1}, new AjaxOptions()
                 {
                     UpdateTargetId = "examList",
                     HttpMethod = "POST",
@@ -83,9 +80,34 @@
                 }
 
             </div>
-            @Html.Partial("_ExamListPartial", Model.Exams)
+            <div class="table-responsive">
+                @Html.Partial("_ExamListPartial", Model.Exams)
+            </div>
+            
         </div>
 
+    </div>
+</div>
+<div id="deleteExamModal" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete Exam</h5>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to delete this exam? <br />
+                    <span class="text-danger">
+                        Deleting this exam will remove all exam records associated with it. <br />
+                        This action cannot be undone.
+                    </span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="deleteExamBtn" type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
     </div>
 </div>
 @section scripts
@@ -125,7 +147,11 @@
 
             $.ajax(options).done(function (data) {
                 $("#studentList").replaceWith(data);
+                $("#clearStudentSearch").click();
+                
             });
+
+            return false;
         };
 
         var resetSearch = function () {
@@ -149,14 +175,43 @@
             return false;
         };
 
+        var deleteExam = function () {
+            var $deleteBtn = $(this);
+            var examId = $deleteBtn.data('exam');
+            var options = {
+                url: "Admin/DeleteExam?id=" + examId,
+                type: "POST"
+            };
+
+            $.ajax(options).done(function (data) {
+                $("#examList").replaceWith(data);
+                $("#deleteExamModal").modal("hide");
+                $("#examMessage").removeClass("hidden");
+                $("#examKeyword").val('').keyup();
+            });
+            return false;
+        };
+
         $(document).ready(function () {
+            //Pagination
             $("#studentPagedList a[href]").click(getStudentPage);
             $("#examPagedList a[href]").click(getExamPage);
 
+            //Activate / Deactivate Student
             $("body").on('click', "button[name='updateStudentStatus']", updateStudentStatus);
 
+            //Search keyword clear text
             $(".has-clear").keyup(displayClearButton);
             $(".clearer").click(resetSearch);
+
+            //Delete Exam
+            $('body').on('click', "#deleteExamBtn", deleteExam);
+            $("body").on("show.bs.modal", "#deleteExamModal", function (event) {
+                var button = $(event.relatedTarget);
+                var examId = button.data('exam');
+                var $deleteExamBtn = $("#deleteExamBtn");
+                $deleteExamBtn.data('exam', examId);
+            });
         });
 
 

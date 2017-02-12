@@ -17,5 +17,6 @@ namespace ExamAssistant.Models
         bool DeactivateUser(int student);
         bool ActivateUser(int student);
         User GetUser(string username);
+        bool DeleteExam(int id);
     }
 }

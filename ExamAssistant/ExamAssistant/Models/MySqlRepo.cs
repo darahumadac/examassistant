@@ -273,5 +273,30 @@ namespace ExamAssistant.Models
 
             return user;
         }
+
+
+        public bool DeleteExam(int id)
+        {
+            bool wasDeleted = false;
+
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand("DeleteExam", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@examId", id);
+
+                    int result = command.ExecuteNonQuery();
+                    if (result == 1)
+                    {
+                        wasDeleted = true;
+                    }
+                }
+                connection.Close();
+            }
+
+            return wasDeleted;
+        }
     }
 }

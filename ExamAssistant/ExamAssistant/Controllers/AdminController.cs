@@ -95,5 +95,11 @@ namespace ExamAssistant.Controllers
             return GetStudentsInPage(1, string.Empty);
         }
 
+        public ActionResult DeleteExam(int id)
+        {
+            _repository.DeleteExam(id);
+            return GetExamsInPage(1, string.Empty);
+        }
+
     }
 }
