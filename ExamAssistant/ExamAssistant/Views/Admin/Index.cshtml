@@ -7,17 +7,18 @@
             <h1 class="page-header">Manage Exam Assistant</h1>
             <div class="table-responsive">
                 <p>
-                    Here you can view the list of students and exams that are registered to
-                    <strong>Exam Assistant</strong> on this computer.<br />
-                    You can add a new student by clicking on the <span class="text-success">Add Student</span> button. <br />
-                    To add a new exam, click on the <span class="text-success">Add Exam</span> button.
+                    Here you can view the list of students and exams that are registered on
+                    <strong>Exam Assistant</strong><br/>
+                    Students need to <span class="text-success">Register</span> before they can take exams using
+                    Exam Assistant. <br />
+                    To add a new exam, click on the <span class="text-success">Create Exam</span> button.
                 </p>
             </div>
             <div class="row">
                 <h2 class="sub-header">
                     Registered Students
                 </h2>
-                @using (Ajax.BeginForm("GetStudentsInPage", new { page = 1}, new AjaxOptions()
+                @using (Ajax.BeginForm("GetStudentsInPage", new { page = 1 }, new AjaxOptions()
                 {
                     UpdateTargetId = "studentList",
                     HttpMethod = "POST",
@@ -54,7 +55,7 @@
                         Create New Exam
                     </button>
                 </h2>
-                @using (Ajax.BeginForm("GetExamsInPage", new {page = 1}, new AjaxOptions()
+                @using (Ajax.BeginForm("GetExamsInPage", new { page = 1 }, new AjaxOptions()
                 {
                     UpdateTargetId = "examList",
                     HttpMethod = "POST",
@@ -83,7 +84,7 @@
             <div class="table-responsive">
                 @Html.Partial("_ExamListPartial", Model.Exams)
             </div>
-            
+
         </div>
 
     </div>
@@ -148,7 +149,7 @@
             $.ajax(options).done(function (data) {
                 $("#studentList").replaceWith(data);
                 $("#clearStudentSearch").click();
-                
+
             });
 
             return false;
