@@ -73,6 +73,7 @@ namespace ExamAssistant.Models
                             LastName = reader.GetString("LAST_NAME"),
                             GradeLevel = reader.GetInt32("GRADE_LEVEL"),
                             Section = reader.GetString("SECTION"),
+                            IsActive = reader.GetInt32("IS_ACTIVE") == 1,
                             CreatedBy = reader.GetString("CREATED BY"),
                             CreatedDate = reader.GetDateTime("CREATED_DATE"),
                             UpdatedBy = reader.GetString("UPDATED BY"),
@@ -128,6 +129,7 @@ namespace ExamAssistant.Models
                             GradeLevel = reader.GetInt32("GRADE_LEVEL"),
                             Section = reader.GetString("SECTION"),
                             IsAdmin = reader.GetInt32("IS_ADMIN") == 1,
+                            IsActive = reader.GetInt32("IS_ACTIVE") == 1,
                             CreatedBy = reader.GetString("CREATED_BY"),
                             CreatedDate = reader.GetDateTime("CREATED_DATE"),
                             UpdatedBy = reader.GetString("UPDATED_BY"),
@@ -178,7 +180,7 @@ namespace ExamAssistant.Models
             }
             catch (MySqlException ex)
             {
-                addUserStatus = RegisterStatus.Fail; //TODO: Implement other register status e.g. AlreadyExists
+                addUserStatus = RegisterStatus.Fail;
                 if (ex.Number == 1062)
                 {
                     addUserStatus = RegisterStatus.AlreadyExists;
@@ -191,6 +193,44 @@ namespace ExamAssistant.Models
             }
 
             return addUserStatus;
+        }
+
+
+        public bool DeactivateUser(int student)
+        {
+            return updateUserStatus(student, false);
+        }
+
+        public bool ActivateUser(int student)
+        {
+            return updateUserStatus(student, true);
+        }
+
+        private bool updateUserStatus(int student, bool shouldActivateUser)
+        {
+            bool wasUpdated = false;
+            
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string storedProcName = "DeactivateUser";
+                if (shouldActivateUser)
+                {
+                    storedProcName = "ActivateUser";
+                }
+                using (MySqlCommand command = new MySqlCommand(storedProcName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@userUserId", student);
+
+                    command.ExecuteNonQuery();
+
+                    wasUpdated = true;
+                }
+                connection.Close();
+            }
+
+            return wasUpdated;
         }
     }
 }

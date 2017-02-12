@@ -17,7 +17,7 @@
                 <h2 class="sub-header">
                     Registered Students
                 </h2>
-                @using (Ajax.BeginForm("SearchStudents", new AjaxOptions()
+                @using (Ajax.BeginForm("GetStudentsInPage", new {page = 1}, new AjaxOptions()
                 {
                     UpdateTargetId = "studentList",
                     HttpMethod = "POST",
@@ -28,12 +28,13 @@
                         <div class="form-group">
                             <label for="keyword" class="control-label col-md-2">Search Student</label>
                             <div class="col-md-7">
-                                <input name="keyword" type="text" class="form-control col-md-10"
+                                <input id="studentKeyword" name="keyword" type="text" 
+                                       class="form-control col-md-10 has-clear"
                                        placeholder="Search by name or ID number">
-                                <button type="submit" class="btn btn-primary">Search</button>
-                            </div>
-                            <div class="control-label text-right text-uppercase">
-                                <strong>@Model.Students.TotalItemCount records</strong>
+                                <span class="clearer glyphicon glyphicon-remove-circle hidden" 
+                                      clear-target="#studentKeyword"></span>
+                                <button id="studentSearchBtn" type="submit" 
+                                        class="btn btn-primary">Search</button>
                             </div>
                         </div>
                         
@@ -58,7 +59,7 @@
                     <div class="form-group">
                         <label for="searchExam" class="control-label col-md-2">Search Exam</label>
                         <div class="col-md-7">
-                            <input name="searchExam" type="text" class="form-control col-md-10"
+                            <input name="searchExam" type="text" class="form-control col-md-10 hidden"
                                    placeholder="Search by name, subject, or type">
                             <button type="submit" class="btn btn-primary">Search</button>
                         </div>
@@ -88,19 +89,61 @@
         }
 
         var getStudentPage = function() {
-            updatePage("#studentPagedList", "student-pagedlist-target",$(this));
+            updatePage("#studentPagedList", "student-pagedlist-target", $(this));
             return false;
         }
 
-        var getExamPage = function () {
+        var getExamPage = function() {
             updatePage("#examPagedList", "exam-pagedlist-target", $(this));
             return false;
         }
 
-        $("#studentPagedList a[href]").click(getStudentPage);
-        $("#examPagedList a").click(getExamPage);
+        var updateStudentStatus = function() {
+            var $studentRecord = $(this);
+
+            var options = {
+                url: $studentRecord.attr("student-target"),
+                type: "POST"
+            };
+
+            $.ajax(options).done(function(data) {
+                $("#studentList").replaceWith(data);
+            });
+        };
+
+        var resetSearch = function() {
+            var textboxId = $(this).attr('clear-target');
+            $(textboxId).val('');
+            $(this).addClass('hidden');
+            $("#studentSearchBtn").click();
+
+
+            return false;
+        };
+
+        var displayClearButton = function() {
+            var $searchBox = $(this);
+            var $clearButton = $searchBox.next('span.clearer');
+            if ($searchBox.val().length > 0) {
+                $clearButton.removeClass('hidden');
+            } else {
+                $clearButton.addClass('hidden');
+            }
+            return false;
+        };
+
+        $(document).ready(function() {
+            $("#studentPagedList a[href]").click(getStudentPage);
+            $("#examPagedList a").click(getExamPage);
+
+            $("body").on('click', "button[name='updateStudentStatus']", updateStudentStatus);
+
+            $(".has-clear").keyup(displayClearButton);
+            $(".clearer").click(resetSearch);
+        });
+
+
     </script>
 }
-
 
 

@@ -14,5 +14,7 @@ namespace ExamAssistant.Models
         KeyValuePair<LoginStatus, User> VerifyUser(string username, string password);
         RegisterStatus AddUser(string username, string password, string firstName, string lastName, 
             int gradeLevel, string section, bool isAdmin);
+        bool DeactivateUser(int student);
+        bool ActivateUser(int student);
     }
 }

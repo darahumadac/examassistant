@@ -8,6 +8,7 @@
         {
             GradeLevel = 0;
             Section = "No Section";
+            IsActive = false;
         }
 
         public string Username { get; set; }
@@ -25,5 +26,7 @@
             get { return GradeLevel == 0 && Section.Equals("No Section"); }
             set { _isAdmin = value; }
         }
+
+        public bool IsActive { get; set; }
     }
 }

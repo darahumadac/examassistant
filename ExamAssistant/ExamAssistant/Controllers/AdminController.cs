@@ -20,47 +20,41 @@ namespace ExamAssistant.Controllers
             _repository = Startup.Repository;
             _recordsPerPage = int.Parse(ConfigurationManager.AppSettings["AdminPage_RowsDisplayedPerPage"]);
         }
-        // GET: Admin
+        
         public ActionResult Index()
         {
-            int totalStudentCount = _repository.GetStudentList().Count;
-
             AdminViewModel adminViewModel = new AdminViewModel()
             {
                 Exams = _repository.GetExamList().ToPagedList(1, _recordsPerPage),
-                Students = _repository.GetStudentList().ToPagedList(1, _recordsPerPage)
+                Students =
+                new KeyValuePair<string, IPagedList<User>>
+                    (string.Empty, _repository.GetStudentList().ToPagedList(1, _recordsPerPage))
             };
 
             return View(adminViewModel);
         }
 
-        public ActionResult SearchStudents(string keyword)
+        public ActionResult GetStudentsInPage(int page, string keyword = "")
         {
             if (Request.IsAjaxRequest())
             {
-                IPagedList<User> searchResults = _repository.GetStudentList().ToPagedList(1, _recordsPerPage);
-                if (!string.IsNullOrWhiteSpace(keyword))
-                {
-                    searchResults = _repository.GetStudentList()
-                    .FindAll(s => s.FullName.ToLower().Contains(keyword.ToLower()) ||
-                                  s.Username.Equals(keyword)).ToPagedList(1, _recordsPerPage);
-                }
-
-                return PartialView("_StudentListPartial", searchResults);
-            }
-
-            return RedirectToAction("Index");
-        }
-
-        public ActionResult GetStudentsInPage(int page)
-        {
-            if (Request.IsAjaxRequest())
-            {
-                IPagedList<User> students = _repository.GetStudentList().ToPagedList(page, _recordsPerPage);
+                KeyValuePair<string, IPagedList<User>> students = getStudentList(keyword, page);
                 return PartialView("_StudentListPartial", students);
             }
             return RedirectToAction("Index");
 
+        }
+
+        private KeyValuePair<string, IPagedList<User>> getStudentList(string keyword, int page)
+        {
+            IPagedList<User> searchResults = _repository.GetStudentList().ToPagedList(page, _recordsPerPage);
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                searchResults = _repository.GetStudentList()
+                .FindAll(s => s.FullName.ToLower().Contains(keyword.ToLower()) ||
+                              s.Username.Equals(keyword)).ToPagedList(page, _recordsPerPage);
+            }
+            return new KeyValuePair<string, IPagedList<User>>(keyword, searchResults);
         }
 
         public ActionResult GetExamsInPage(int page)
@@ -71,7 +65,18 @@ namespace ExamAssistant.Controllers
                 return PartialView("_ExamListPartial", exams);
             }
             return RedirectToAction("Index");
+        }
 
+        public ActionResult DeactivateStudent(int student)
+        {
+            _repository.DeactivateUser(student);
+            return GetStudentsInPage(1, string.Empty);
+        }
+
+        public ActionResult ActivateStudent(int student)
+        {
+            _repository.ActivateUser(student);
+            return GetStudentsInPage(1, string.Empty);
         }
 
     }

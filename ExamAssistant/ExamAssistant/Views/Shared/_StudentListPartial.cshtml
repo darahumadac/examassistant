@@ -1,43 +1,74 @@
 ﻿@using ExamAssistant.Models
-@model IPagedList<User>
+@model KeyValuePair<string, IPagedList<User>>
 @{
-    IPagedList<User> students = Model;
+    IPagedList<User> students = Model.Value;
+    string searchKeyword = Model.Key;
     int studentListLength = students.Count;
 }
 <div id="studentList">
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>ID No.</th>
-            <th>Full Name</th>
-            <th>Grade Level</th>
-            <th>Section</th>
-            <th></th>
-        </tr>
+            <tr>
+                <th>ID No.</th>
+                <th>Full Name</th>
+                <th>Grade Level</th>
+                <th>Section</th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
-        @for (int i = 0; i < studentListLength; i++)
-        {
-            User student = students[i];
-            <tr>
-                <td>@student.Username</td>
-                <td>@student.FullName</td>
-                <td>@student.GradeLevel</td>
-                <td>@student.Section</td>
-                <td>
-                    <button class="btn btn-danger">Remove</button>
-                </td>
-            </tr>
-        }
+            @for (int i = 0; i < studentListLength; i++)
+            {
+                User student = students[i];
+                <tr>
+                    <td>@student.Username</td>
+                    <td>@student.FullName</td>
+                    <td>@student.GradeLevel</td>
+                    <td>@student.Section</td>
+                    <td>
+                        @if (student.IsActive)
+                        {
+                            <button name="updateStudentStatus" class="btn btn-danger"
+                                    student-target=@Url.Action("DeactivateStudent", "Admin",
+                                                              new {student = @student.Id})>
+                                Deactivate
+                            </button>
+                        }
+                        else
+                        {
+                            <button name="updateStudentStatus" class="btn btn-success"
+                                    student-target=@Url.Action("ActivateStudent", "Admin",
+                                                              new {student = @student.Id})>
+                                Activate
+                            </button>
+                        }
+                        
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
+    <div class="control-label text-right text-uppercase">
+        @{
+            int computedRecordCount = students.PageNumber * students.PageSize;
+
+            int recordCount = computedRecordCount < students.TotalItemCount ?
+                computedRecordCount : students.TotalItemCount;
+        }
+        <strong>@recordCount of @students.TotalItemCount records</strong>
+    </div>
     @{
-        if (Model.PageCount > 1)
+        if (students.PageCount > 1)
         {
             <div id="studentPagedList" student-pagedlist-target="#studentList" class="text-center">
-                @Html.PagedListPager(Model, page =>
-                    Url.Action("GetStudentsInPage", "Admin", new {page}),
-                    PagedListRenderOptions.Classic)
+                @Html.PagedListPager(students, page =>
+                     Url.Action("GetStudentsInPage", "Admin", new { page, keyword = searchKeyword }),
+                    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.Classic,
+                    new AjaxOptions()
+                    {
+                        HttpMethod = "GET",
+                        UpdateTargetId = "studentList"
+                    }))
             </div>
         }
 
