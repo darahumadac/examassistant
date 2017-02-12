@@ -9,7 +9,7 @@ using PagedList;
 
 namespace ExamAssistant.Controllers
 {
-    [Authorize]
+    [AdministratorOnly]
     public class AdminController : Controller
     {
         private IRepository _repository;

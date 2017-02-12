@@ -179,6 +179,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AdministratorOnlyAttribute.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Choice.cs" />
     <Compile Include="Models\DbRecord.cs" />
@@ -261,6 +262,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Shared\_StudentListPartial.cshtml" />
     <Content Include="Views\Shared\_ExamListPartial.cshtml" />
+    <Content Include="Views\Shared\Forbidden.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

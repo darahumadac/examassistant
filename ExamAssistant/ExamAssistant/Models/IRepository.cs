@@ -16,5 +16,6 @@ namespace ExamAssistant.Models
             int gradeLevel, string section, bool isAdmin);
         bool DeactivateUser(int student);
         bool ActivateUser(int student);
+        User GetUser(string username);
     }
 }

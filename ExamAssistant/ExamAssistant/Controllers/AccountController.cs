@@ -78,7 +78,7 @@ namespace ExamAssistant.Controllers
             switch (result.Key)
             {
                 case LoginStatus.Success:
-                    FormsAuthentication.RedirectFromLoginPage(result.Value.FullName, true);
+                    FormsAuthentication.RedirectFromLoginPage(result.Value.Username, true);
                     if (result.Value.IsAdmin)
                     {
                         return RedirectToAction("Index", "Admin");
@@ -125,7 +125,7 @@ namespace ExamAssistant.Controllers
                 switch (result)
                 {
                     case RegisterStatus.Success:
-                        FormsAuthentication.RedirectFromLoginPage(user.FullName, true);
+                        FormsAuthentication.RedirectFromLoginPage(user.Username, true);
                         return RedirectToAction("Index", "Home");
                     case RegisterStatus.AlreadyExists:
                         ModelState.AddModelError("", "Cannot register. User already exists");

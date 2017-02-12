@@ -232,5 +232,46 @@ namespace ExamAssistant.Models
 
             return wasUpdated;
         }
+
+
+        public User GetUser(string username)
+        {
+            User user = new UnauthorizedUser();
+
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand("GetUserDetails", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@userUsername", username);
+
+                    MySqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        User userRecord = new User()
+                        {
+                            Id = reader.GetInt32("USER_ID"),
+                            Username = reader.GetString("USERNAME"),
+                            FirstName = reader.GetString("FIRST_NAME"),
+                            LastName = reader.GetString("LAST_NAME"),
+                            GradeLevel = reader.GetInt32("GRADE_LEVEL"),
+                            Section = reader.GetString("SECTION"),
+                            IsAdmin = reader.GetInt32("IS_ADMIN") == 1,
+                            IsActive = reader.GetInt32("IS_ACTIVE") == 1,
+                            CreatedBy = reader.GetString("CREATED_BY"),
+                            CreatedDate = reader.GetDateTime("CREATED_DATE"),
+                            UpdatedBy = reader.GetString("UPDATED_BY"),
+                            UpdatedDate = reader.GetDateTime("UPDATED_DATE")
+                        };
+
+                        user = userRecord;
+                    }
+                }
+                connection.Close();
+            }
+
+            return user;
+        }
     }
 }
