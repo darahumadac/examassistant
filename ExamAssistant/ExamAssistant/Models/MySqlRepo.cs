@@ -298,5 +298,46 @@ namespace ExamAssistant.Models
 
             return wasDeleted;
         }
+
+
+        public List<StudentExam> GetExamsByUser(string username)
+        {
+            List<StudentExam> userExams = new List<StudentExam>();
+
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand("GetExamsByUser", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@userUsername", username);
+
+                    MySqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        StudentExam exam = new StudentExam()
+                        {
+                            Id = reader.GetInt32("USER_EXAM_ID"),
+                            ExamId = reader.GetInt32("EXAM_ID"),
+                            ExamName = reader.GetString("EXAM_NAME"),
+                            Subject = reader.GetString("SUBJECT_NAME"),
+                            ExamType = reader.GetString("EXAM_TYPE"),
+                            Schedule = reader.GetDateTime("EXAM_DATE"),
+                            IsCompleted = reader.GetInt32("EXAM_STATUS") == 1,
+                            Score = reader.GetInt32("SCORE"),
+                            TotalPoints = reader.GetInt32("TOTAL_POINTS"),
+                            CreatedBy = reader.GetString("CREATED_BY"),
+                            CreatedDate = reader.GetDateTime("CREATED_DATE"),
+                            UpdatedBy = reader.GetString("UPDATED_BY"),
+                            UpdatedDate = reader.GetDateTime("UPDATED_DATE")
+                        };
+
+                        userExams.Add(exam);
+                    }
+                }
+                connection.Close();
+            }
+            return userExams;
+        }
     }
 }

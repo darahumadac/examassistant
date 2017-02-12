@@ -23,7 +23,7 @@
         public string Section { get; set; }
 
         public bool IsAdmin {
-            get { return GradeLevel == 0 && Section.Equals("No Section"); }
+            get { return _isAdmin; }
             set { _isAdmin = value; }
         }
 

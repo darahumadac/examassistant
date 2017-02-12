@@ -184,12 +184,12 @@
     <Compile Include="Models\Choice.cs" />
     <Compile Include="Models\DbRecord.cs" />
     <Compile Include="Models\Exam.cs" />
+    <Compile Include="Models\ExamDashboardViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LoginManager.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\IRepository.cs" />
     <Compile Include="Models\MySqlRepo.cs" />
-    <Compile Include="Models\StudentExam.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UsersManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -263,9 +263,11 @@
     <Content Include="Views\Shared\_StudentListPartial.cshtml" />
     <Content Include="Views\Shared\_ExamListPartial.cshtml" />
     <Content Include="Views\Shared\Forbidden.cshtml" />
+    <Content Include="Views\Shared\_StudentExamPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Database\MySQL\" />
     <Folder Include="lib\" />
   </ItemGroup>
   <ItemGroup>

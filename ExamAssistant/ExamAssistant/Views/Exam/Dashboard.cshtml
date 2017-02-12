@@ -1,6 +1,5 @@
-﻿@using System.EnterpriseServices
-@using ExamAssistant.Models
-@model ExamAssistant.Models.Student
+﻿@using ExamAssistant.Models
+@model ExamDashboardViewModel
 
 <div class="container-fluid">
     <div class="row">
@@ -15,73 +14,57 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">Dashboard</h1>
             <h2 class="sub-header">Your Exams</h2>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Subject</th>
-                        <th>Exam Type</th>
-                        <th>Schedule</th>
-                        <th>Score</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @DisplayExamTable(new Dictionary<Exam, ExamInfo>())
-                    </tbody>
-                </table>
-            </div>
+            @{
+                StudentExamPartialViewModel unfinishedExamViewModel = new StudentExamPartialViewModel()
+                {
+                    Exams = Model.UnfinishedExams,
+                    PagerId = "unfinishedExamPagedList",
+                    ExamTableId = "unfinishedExamList",
+                    IsCompleted = false
+                };
+            }
+            @Html.Partial("_StudentExamPartial", unfinishedExamViewModel)
 
             <h2 class="sub-header">Exam History</h2>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Subject</th>
-                        <th>Exam Type</th>
-                        <th>Schedule</th>
-                        <th>Score</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @DisplayExamTable(new Dictionary<Exam, ExamInfo>())
-                    </tbody>
-                </table>
-            </div>
+            @{
+                StudentExamPartialViewModel completedExamViewModel = new StudentExamPartialViewModel()
+                {
+                    Exams = Model.CompletedExams,
+                    PagerId = "completedExamPagedList",
+                    ExamTableId = "completedExamList",
+                    IsCompleted = true
+                };
+            }
+            @Html.Partial("_StudentExamPartial", completedExamViewModel)
         </div>
     </div>
 </div>
 
-@helper DisplayExamTable(Dictionary<Exam, ExamInfo> userExam)
-{
-    List<Exam> exams = userExam.Keys.ToList();
-    List<ExamInfo> examInfos = userExam.Values.ToList();
-    int userExamsLength = userExam.Count;
+@section scripts{
+    <script type="text/javascript">
 
-    for (int i = 0; i < userExamsLength; i++)
-    {
-        Exam exam = exams[i];
-        ExamInfo info = examInfos[i];
-        <tr>
-            <td>@(i + 1)</td>
-            <td>@exam.Name</td>
-            <td>@exam.Subject - @exam.Type</td>
-            <td>@info.Date.ToString("MM/dd/yyyy")</td>
+        var updatePage = function (id, targetId, e) {
+            var $pageLink = e;
 
-            @if (info.Status == ExamStatus.New)
-            {
-                <td>-/@exam.Total</td>
-                <td>
-                    @Html.ActionLink("Take Now", "Take", new { selectedExam = exam.Name }, new { @class = "btn btn-success" })
-                </td>
-            }
-            else
-            {
-                <td>TotalScore/@exam.Total</td>
-            }
+            var options = {
+                url: $pageLink.attr("href"),
+                type: "GET"
+            };
 
-        </tr>
-    }
+            $.ajax(options).done(function (data) {
+                var target = $(id).attr(targetId);
+                $(target).replaceWith(data);
+            });
+        };
+
+        var getStudentExamPage = function() {
+            var pagedListId = $(this).closest(".paged-list").attr('id');
+            updatePage("#"+pagedListId, "exam-pagedlist-target", $(this));
+            return false;
+        };
+
+        $(document).ready(function() {
+            $(".paged-list a[href]").click(getStudentExamPage);
+        });
+    </script>
 }

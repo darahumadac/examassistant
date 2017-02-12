@@ -114,7 +114,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        var updatePage = function (id, targetId, e) {
+        var updatePage = function(id, targetId, e) {
             var $pageLink = e;
 
             var options = {
@@ -122,21 +122,21 @@
                 type: "GET"
             };
 
-            $.ajax(options).done(function (data) {
+            $.ajax(options).done(function(data) {
                 var target = $(id).attr(targetId);
                 $(target).replaceWith(data);
             });
-        }
+        };
 
-        var getStudentPage = function () {
+        var getStudentPage = function() {
             updatePage("#studentPagedList", "student-pagedlist-target", $(this));
             return false;
-        }
+        };
 
-        var getExamPage = function () {
+        var getExamPage = function() {
             updatePage("#examPagedList", "exam-pagedlist-target", $(this));
             return false;
-        }
+        };
 
         var updateStudentStatus = function () {
             var $studentRecord = $(this);

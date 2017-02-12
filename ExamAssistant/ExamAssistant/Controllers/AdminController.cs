@@ -18,7 +18,7 @@ namespace ExamAssistant.Controllers
         public AdminController()
         {
             _repository = Startup.Repository;
-            _recordsPerPage = int.Parse(ConfigurationManager.AppSettings["AdminPage_RowsDisplayedPerPage"]);
+            _recordsPerPage = Startup.RecordsPerPage;
         }
         
         public ActionResult Index()
