@@ -11,7 +11,7 @@ namespace ExamAssistant.Models
 {
     public class AdminViewModel
     {
-        public IPagedList<ExamInformation> Exams { get; set; }
+        public KeyValuePair<string, IPagedList<ExamInformation>> Exams { get; set; }
         public KeyValuePair<string, IPagedList<User>> Students { get; set; }
     }
 

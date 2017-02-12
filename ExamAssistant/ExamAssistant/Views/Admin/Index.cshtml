@@ -8,8 +8,8 @@
             <div class="table-responsive">
                 <p>
                     Here you can view the list of students and exams that are registered to
-                    <strong>Exam Assistant</strong> on this computer.<br/>
-                    You can add a new student by clicking on the <span class="text-success">Add Student</span> button. <br/>
+                    <strong>Exam Assistant</strong> on this computer.<br />
+                    You can add a new student by clicking on the <span class="text-success">Add Student</span> button. <br />
                     To add a new exam, click on the <span class="text-success">Add Exam</span> button.
                 </p>
             </div>
@@ -17,7 +17,7 @@
                 <h2 class="sub-header">
                     Registered Students
                 </h2>
-                @using (Ajax.BeginForm("GetStudentsInPage", new {page = 1}, new AjaxOptions()
+                @using (Ajax.BeginForm("GetStudentsInPage", new { page = 1 }, new AjaxOptions()
                 {
                     UpdateTargetId = "studentList",
                     HttpMethod = "POST",
@@ -28,25 +28,27 @@
                         <div class="form-group">
                             <label for="keyword" class="control-label col-md-2">Search Student</label>
                             <div class="col-md-7">
-                                <input id="studentKeyword" name="keyword" type="text" 
+                                <input id="studentKeyword" name="keyword" type="text"
                                        class="form-control col-md-10 has-clear"
                                        placeholder="Search by name or ID number">
-                                <span class="clearer glyphicon glyphicon-remove-circle hidden" 
+                                <span class="clearer glyphicon glyphicon-remove-circle hidden"
                                       clear-target="#studentKeyword"></span>
-                                <button id="studentSearchBtn" type="submit" 
-                                        class="btn btn-primary">Search</button>
+                                <button id="studentSearchBtn" type="submit"
+                                        class="btn btn-primary search-btn">
+                                    Search
+                                </button>
                             </div>
                         </div>
-                        
+
                     </div>
-                    
+
                 }
-                
+
             </div>
             <div class="table-responsive">
                 @Html.Partial("_StudentListPartial", Model.Students)
             </div>
-            
+
             <div class="row">
                 <h2 class="sub-header">
                     Available Exams
@@ -55,16 +57,31 @@
                         Create New Exam
                     </button>
                 </h2>
-                <div class="form-horizontal col-md-9" role="search">
-                    <div class="form-group">
-                        <label for="searchExam" class="control-label col-md-2">Search Exam</label>
-                        <div class="col-md-7">
-                            <input name="searchExam" type="text" class="form-control col-md-10 hidden"
-                                   placeholder="Search by name, subject, or type">
-                            <button type="submit" class="btn btn-primary">Search</button>
+                @using (Ajax.BeginForm("GetExamsInPage", new { page = 1 }, new AjaxOptions()
+                {
+                    UpdateTargetId = "examList",
+                    HttpMethod = "POST",
+                    InsertionMode = InsertionMode.Replace
+                }))
+                {
+                    <div class="form-horizontal col-md-9" role="search">
+                        <div class="form-group">
+                            <label for="examKeyword" class="control-label col-md-2">Search Exam</label>
+                            <div class="col-md-7">
+                                <input id="examKeyword" name="examKeyword" type="text"
+                                       class="form-control col-md-10 has-clear"
+                                       placeholder="Search by name, subject, or type">
+                                <span class="clearer glyphicon glyphicon-remove-circle hidden"
+                                      clear-target="#examKeyword"></span>
+                                <button id="examSearchBtn"
+                                        type="submit" class="btn btn-primary search-btn">
+                                    Search
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
+
             </div>
             @Html.Partial("_ExamListPartial", Model.Exams)
         </div>
@@ -74,7 +91,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        var updatePage = function(id, targetId, e) {
+        var updatePage = function (id, targetId, e) {
             var $pageLink = e;
 
             var options = {
@@ -82,23 +99,23 @@
                 type: "GET"
             };
 
-            $.ajax(options).done(function(data) {
+            $.ajax(options).done(function (data) {
                 var target = $(id).attr(targetId);
                 $(target).replaceWith(data);
             });
         }
 
-        var getStudentPage = function() {
+        var getStudentPage = function () {
             updatePage("#studentPagedList", "student-pagedlist-target", $(this));
             return false;
         }
 
-        var getExamPage = function() {
+        var getExamPage = function () {
             updatePage("#examPagedList", "exam-pagedlist-target", $(this));
             return false;
         }
 
-        var updateStudentStatus = function() {
+        var updateStudentStatus = function () {
             var $studentRecord = $(this);
 
             var options = {
@@ -106,22 +123,22 @@
                 type: "POST"
             };
 
-            $.ajax(options).done(function(data) {
+            $.ajax(options).done(function (data) {
                 $("#studentList").replaceWith(data);
             });
         };
 
-        var resetSearch = function() {
-            var textboxId = $(this).attr('clear-target');
+        var resetSearch = function () {
+            var $clearButton = $(this);
+            var textboxId = $clearButton.attr('clear-target');
             $(textboxId).val('');
-            $(this).addClass('hidden');
-            $("#studentSearchBtn").click();
-
+            $clearButton.addClass('hidden');
+            $clearButton.next('button.search-btn').click();
 
             return false;
         };
 
-        var displayClearButton = function() {
+        var displayClearButton = function () {
             var $searchBox = $(this);
             var $clearButton = $searchBox.next('span.clearer');
             if ($searchBox.val().length > 0) {
@@ -132,9 +149,9 @@
             return false;
         };
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#studentPagedList a[href]").click(getStudentPage);
-            $("#examPagedList a").click(getExamPage);
+            $("#examPagedList a[href]").click(getExamPage);
 
             $("body").on('click', "button[name='updateStudentStatus']", updateStudentStatus);
 

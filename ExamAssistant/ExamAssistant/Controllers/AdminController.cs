@@ -25,7 +25,9 @@ namespace ExamAssistant.Controllers
         {
             AdminViewModel adminViewModel = new AdminViewModel()
             {
-                Exams = _repository.GetExamList().ToPagedList(1, _recordsPerPage),
+                Exams = 
+                new KeyValuePair<string, IPagedList<ExamInformation>>
+                    (string.Empty, _repository.GetExamList().ToPagedList(1, _recordsPerPage)),
                 Students =
                 new KeyValuePair<string, IPagedList<User>>
                     (string.Empty, _repository.GetStudentList().ToPagedList(1, _recordsPerPage))
@@ -57,15 +59,29 @@ namespace ExamAssistant.Controllers
             return new KeyValuePair<string, IPagedList<User>>(keyword, searchResults);
         }
 
-        public ActionResult GetExamsInPage(int page)
+        public ActionResult GetExamsInPage(int page, string examKeyword = "")
         {
             if (Request.IsAjaxRequest())
             {
-                IPagedList<ExamInformation> exams = _repository.GetExamList().ToPagedList(page, _recordsPerPage);
+                KeyValuePair<string, IPagedList<ExamInformation>> exams = getExamList(examKeyword, page);
                 return PartialView("_ExamListPartial", exams);
             }
             return RedirectToAction("Index");
         }
+
+        private KeyValuePair<string, IPagedList<ExamInformation>> getExamList(string keyword, int page)
+        {
+            IPagedList<ExamInformation> searchResults = _repository.GetExamList().ToPagedList(page, _recordsPerPage);
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                searchResults = _repository.GetExamList()
+                .FindAll(s => s.Name.ToLower().Contains(keyword.ToLower()) ||
+                              s.Subject.ToLower().Equals(keyword.ToLower()) ||
+                              s.ExamType.ToLower().Contains(keyword.ToLower()))
+                              .ToPagedList(page, _recordsPerPage);
+            }
+            return new KeyValuePair<string, IPagedList<ExamInformation>>(keyword, searchResults);
+        } 
 
         public ActionResult DeactivateStudent(int student)
         {
